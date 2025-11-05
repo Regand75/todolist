@@ -1,7 +1,9 @@
 import {TasksType, TodolistType} from "../App.tsx";
 import {Button} from "./Button.tsx";
-import {ChangeEvent, Dispatch, KeyboardEvent, SetStateAction, useState} from "react";
+import {ChangeEvent, Dispatch, SetStateAction} from "react";
 import {Input} from "./Input.tsx";
+import {CreateItemForm} from "./CreateItemForm.tsx";
+import {EditableSpan} from "./EditableSpan.tsx";
 
 type PropsType = {
     todolist: TodolistType;
@@ -10,7 +12,8 @@ type PropsType = {
     createTask: (todolistId: string, title: string) => void;
     changeTaskStatus: (todolistId: string, taskId: string, isDone: boolean) => void;
     setTodoLists: Dispatch<SetStateAction<TodolistType[]>>;
-    deleteTodolist: (todolistId: string) => void
+    deleteTodolist: (todolistId: string) => void;
+    changeTaskTitle: (todolistId: string, taskId: string, title: string) => void;
 }
 
 export type FilterValues = 'all' | 'active' | 'completed';
@@ -23,10 +26,8 @@ export const TodolistItem = ({
                                  changeTaskStatus,
                                  setTodoLists,
                                  deleteTodolist,
+                                 changeTaskTitle,
                              }: PropsType) => {
-
-    const [taskTitle, setTaskTitle] = useState('');
-    const [error, setError] = useState<string | null>(null);
 
     const filteredFoo = () => {
         switch (filter) {
@@ -40,7 +41,10 @@ export const TodolistItem = ({
     }
 
     const filteredTasks = (id: string, filterValue: FilterValues) => {
-        setTodoLists((prevTodoLists) => prevTodoLists.map(todolist => todolist.id === id ? {...todolist, filter: filterValue} : todolist));
+        setTodoLists((prevTodoLists) => prevTodoLists.map(todolist => todolist.id === id ? {
+            ...todolist,
+            filter: filterValue
+        } : todolist));
 
     }
 
@@ -52,10 +56,14 @@ export const TodolistItem = ({
             const newStatusValue = event.currentTarget.checked;
             changeTaskStatus(id, task.id, newStatusValue);
         }
+        const changeTaskTitleHandler = (editTitle: string) => {
+            changeTaskTitle(id, task.id, editTitle);
+        }
+
         return (
             <li className={task.isDone ? 'is-done' : ''} key={task.id}>
                 <Input type="checkbox" checked={task.isDone} onChange={changeTaskStatusHandler}/>
-                <span>{task.title}</span>
+                <EditableSpan onChange={changeTaskTitleHandler} value={task.title}/>
                 <Button title='+' callBack={deleteTaskHandler}/>
             </li>
         )
@@ -63,29 +71,12 @@ export const TodolistItem = ({
 
     const filteredTasksHandler = (value: FilterValues) => () => filteredTasks(id, value);
 
-    const createTaskHandler = () => {
-        const trimmedTitle = taskTitle.trim();
-        if (trimmedTitle !== '') {
-            createTask(id, trimmedTitle);
-            setTaskTitle('');
-        } else {
-            setError('Title is required');
-        }
-    }
-
-    const changeTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setTaskTitle(event.currentTarget.value);
-        setError(null);
-    }
-
-    const createTaskOnEnterHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            createTaskHandler();
-        }
-    }
-
     const deleteTodolistHandler = () => {
         deleteTodolist(id);
+    }
+
+    const createTaskHandler = (EditedTitle: string) => {
+        createTask(id, EditedTitle);
     }
 
     return (
@@ -94,14 +85,7 @@ export const TodolistItem = ({
                 <h3>{title}</h3>
                 <Button title='x' callBack={deleteTodolistHandler}/>
             </div>
-            <div>
-                <Input className={error ? 'error' : ''}
-                       value={taskTitle}
-                       onChange={changeTaskTitleHandler}
-                       onKeyDown={createTaskOnEnterHandler}/>
-                <Button title='+' callBack={createTaskHandler}/>
-                {error && <div className='error-message'>{error}</div>}
-            </div>
+            <CreateItemForm createItem={createTaskHandler}/>
             {tasks.length === 0 ? (<p>Tasks no</p>) : (<ul>{mappedTasks}</ul>)}
             <div>
                 <Button className={filter === 'all' ? 'active-filter' : ''} title='All'

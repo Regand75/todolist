@@ -1,4 +1,4 @@
-import {ChangeEvent, KeyboardEvent} from "react";
+import {ChangeEventHandler, FocusEventHandler, InputHTMLAttributes, KeyboardEventHandler} from "react";
 
 type InputType = {
     className?: string;
@@ -6,19 +6,32 @@ type InputType = {
     checked?: boolean;
     value?: string;
     placeholder?: string;
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-    onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
-}
+    onChange?: ChangeEventHandler<HTMLInputElement>;
+    onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+    onBlur?: FocusEventHandler<HTMLInputElement>;
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "checked" | "onChange" | "onKeyDown" | "onBlur">;
 
-export const Input = ({className, type, checked, value, placeholder, onChange, onKeyDown}: InputType) => {
-    const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        onChange!(event);
-    }
+export const Input = ({
+                          className,
+                          type,
+                          checked,
+                          value,
+                          placeholder,
+                          onChange,
+                          onKeyDown,
+                          onBlur,
+                          ...rest
+                      }: InputType) => {
 
-    const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        onKeyDown!(event);
-    }
     return (
-        <input className={className!} type={type!} checked={checked!} value={value!} placeholder={placeholder!} onChange={onChangeHandler} onKeyDown={onKeyDownHandler}/>
+        <input className={className ?? ''}
+               type={type ?? 'text'}
+               checked={checked ?? false}
+               value={value ?? ''}
+               placeholder={placeholder ?? ''}
+               onChange={onChange ?? (() => {})}
+               onKeyDown={onKeyDown ?? (() => {})}
+               onBlur={onBlur}
+               {...rest}/>
     );
 };
