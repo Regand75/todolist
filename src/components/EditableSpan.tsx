@@ -2,16 +2,17 @@ import {ChangeEvent, useState} from "react";
 import {Input} from "./Input.tsx";
 
 type EditableSpanPropsType = {
-    value: string;
-    onChange: (editTitle: string) => void;
+    title: string;
+    onChange: (newTitle: string) => void;
 }
 
-export const EditableSpan = ({value, onChange}: EditableSpanPropsType) => {
+export const EditableSpan = ({title, onChange}: EditableSpanPropsType) => {
     const [isEditMode, setIsEditMode] = useState(false);
-    const [editTitle, setEditTitle] = useState(value);
+    const [editTitle, setEditTitle] = useState('');
 
     const turnOnEditMode = () => {
         setIsEditMode(true);
+        setEditTitle(title);
     }
 
     const turnOffEditMode = () => {
@@ -28,7 +29,7 @@ export const EditableSpan = ({value, onChange}: EditableSpanPropsType) => {
             {isEditMode ? (
                 <Input value={editTitle} onChange={changeTitle} onBlur={turnOffEditMode} autoFocus/>
             ) : (
-                <span onDoubleClick={turnOnEditMode}> {value}</span>
+                <span onDoubleClick={turnOnEditMode}> {title}</span>
             )}
         </>
     )

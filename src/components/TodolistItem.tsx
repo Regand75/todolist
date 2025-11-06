@@ -14,6 +14,7 @@ type PropsType = {
     setTodoLists: Dispatch<SetStateAction<TodolistType[]>>;
     deleteTodolist: (todolistId: string) => void;
     changeTaskTitle: (todolistId: string, taskId: string, title: string) => void;
+    changeTodolistTitle: (todolistId: string, title: string) => void;
 }
 
 export type FilterValues = 'all' | 'active' | 'completed';
@@ -27,6 +28,7 @@ export const TodolistItem = ({
                                  setTodoLists,
                                  deleteTodolist,
                                  changeTaskTitle,
+                                 changeTodolistTitle,
                              }: PropsType) => {
 
     const filteredFoo = () => {
@@ -51,19 +53,19 @@ export const TodolistItem = ({
     const mappedTasks = filteredFoo().map(task => {
         const deleteTaskHandler = () => {
             deleteTask(id, task.id);
-        }
+        };
         const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => {
             const newStatusValue = event.currentTarget.checked;
             changeTaskStatus(id, task.id, newStatusValue);
-        }
-        const changeTaskTitleHandler = (editTitle: string) => {
-            changeTaskTitle(id, task.id, editTitle);
-        }
+        };
+        const changeTaskTitleHandler = (newTitle: string) => {
+            changeTaskTitle(id, task.id, newTitle);
+        };
 
         return (
             <li className={task.isDone ? 'is-done' : ''} key={task.id}>
                 <Input type="checkbox" checked={task.isDone} onChange={changeTaskStatusHandler}/>
-                <EditableSpan onChange={changeTaskTitleHandler} value={task.title}/>
+                <EditableSpan onChange={changeTaskTitleHandler} title={task.title}/>
                 <Button title='+' callBack={deleteTaskHandler}/>
             </li>
         )
@@ -73,16 +75,22 @@ export const TodolistItem = ({
 
     const deleteTodolistHandler = () => {
         deleteTodolist(id);
-    }
+    };
 
     const createTaskHandler = (EditedTitle: string) => {
         createTask(id, EditedTitle);
-    }
+    };
+
+    const changeTodolistTitleHandler = (newTitle: string) => {
+        changeTodolistTitle(id, newTitle);
+    };
 
     return (
         <div>
             <div className={'container'}>
-                <h3>{title}</h3>
+                <h3>
+                    <EditableSpan onChange={changeTodolistTitleHandler} title={title}/>
+                </h3>
                 <Button title='x' callBack={deleteTodolistHandler}/>
             </div>
             <CreateItemForm createItem={createTaskHandler}/>
