@@ -1,8 +1,21 @@
 import './App.css'
-import {FilterValues, TodolistItem} from "./components/TodolistItem.tsx";
+import {FilterValues, TodolistItem} from "./components/TodolistItem/TodolistItem.tsx";
 import {v1} from "uuid";
 import {useState} from "react";
 import {CreateItemForm} from "./components/CreateItemForm.tsx";
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import Switch from '@mui/material/Switch';
+import CssBaseline from '@mui/material/CssBaseline';
+
+type ThemeMode = 'dark' | 'light'
 
 export type TasksType = {
     id: string;
@@ -31,69 +44,120 @@ export const App = () => {
 
     const [tasks, setTasks] = useState<TasksStateType>({
         [todolistId1]: [
-            { id: v1() as string, title: 'HTML&CSS', isDone: true },
-            { id: v1() as string, title: 'JS', isDone: true },
-            { id: v1() as string, title: 'ReactJS', isDone: false },
-            { id: v1() as string, title: 'Rest API', isDone: true },
-            { id: v1() as string, title: 'GraphQL', isDone: false },
+            {id: v1() as string, title: 'HTML&CSS', isDone: true},
+            {id: v1() as string, title: 'JS', isDone: true},
+            {id: v1() as string, title: 'ReactJS', isDone: false},
+            {id: v1() as string, title: 'Rest API', isDone: true},
+            {id: v1() as string, title: 'GraphQL', isDone: false},
         ],
         [todolistId2]: [
-            { id: v1() as string, title: 'Rest API', isDone: true },
-            { id: v1() as string, title: 'GraphQL', isDone: false },
-            { id: v1() as string, title: 'JS', isDone: true },
-            { id: v1() as string, title: 'ReactJS', isDone: false },
+            {id: v1() as string, title: 'Rest API', isDone: true},
+            {id: v1() as string, title: 'GraphQL', isDone: false},
+            {id: v1() as string, title: 'JS', isDone: true},
+            {id: v1() as string, title: 'ReactJS', isDone: false},
         ],
     });
 
+    const [themeMode, setThemeMode] = useState<ThemeMode>('light')
+
+    const theme = createTheme({
+        palette: {
+            mode: themeMode,
+            primary: {
+                main: '#087EA4',
+            },
+        },
+    })
+
+    const changeMode = () => {
+        setThemeMode(themeMode === 'light' ? 'dark' : 'light')
+    }
+
     const deleteTask = (todolistId: string, taskId: string) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== taskId)});
+        setTasks((prevState) => ({
+            ...prevState,
+            [todolistId]: prevState[todolistId].filter(task => task.id !== taskId)
+        }));
     };
 
     const createTask = (todolistId: string, title: string) => {
         const newTask = {id: v1() as string, title: title, isDone: false};
-        setTasks({...tasks, [todolistId]: [newTask, ...tasks[todolistId]]});
+        setTasks((prevState) => ({...prevState, [todolistId]: [newTask, ...tasks[todolistId]]}));
     };
 
     const changeTaskStatus = (todolistId: string, taskId: string, isDone: boolean) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, isDone: isDone} : task)});
+        setTasks((prevState) => ({
+            ...prevState,
+            [todolistId]: prevState[todolistId].map(task => task.id === taskId ? {...task, isDone: isDone} : task)
+        }));
     };
 
     const deleteTodolist = (todolistId: string) => {
-        setTodoLists(prev => prev.filter(todolist => todolist.id !== todolistId));
+        setTodoLists(prevState => prevState.filter(todolist => todolist.id !== todolistId));
         delete tasks[todolistId];
-        setTasks(({[todolistId]: _, ...rest}) => rest);
-    };
+        setTasks((prevState) => {
+            const {[todolistId]: _, ...rest} = prevState;
+            return rest;
+        });
+    }
 
     const createTodolistHandler = (newTitle: string) => {
         const todolistId = v1() as string;
         const newTodolist: TodolistType = {id: todolistId, title: newTitle, filter: 'all'};
-        setTodoLists([newTodolist, ...todoLists]);
-        setTasks({...tasks, [todolistId]: []});
+        setTodoLists((prevState) => [newTodolist, ...prevState]);
+        setTasks((prevState) => ({...prevState, [todolistId]: []}));
     };
 
     const changeTaskTitle = (todolistId: string, taskId: string, title: string) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title: title} : task)});
+        setTasks((prevState) => ({
+            ...prevState,
+            [todolistId]: prevState[todolistId].map(task => task.id === taskId ? {...task, title: title} : task)
+        }));
     };
 
     const changeTodolistTitle = (todolistId: string, title: string) => {
-        setTodoLists(todoLists.map(todolist => todolist.id === todolistId ? {...todolist, title: title} : todolist));
+        setTodoLists((prevState) => prevState.map(todolist => todolist.id === todolistId ? {
+            ...todolist,
+            title: title
+        } : todolist));
     };
 
     return (
         <div className="app">
-            <CreateItemForm createItem={createTodolistHandler}/>
-            {todoLists.map((todolist) => (
-                <TodolistItem key={todolist.id}
-                              todolist={todolist}
-                              tasks={tasks[todolist.id]}
-                              deleteTask={deleteTask}
-                              createTask={createTask}
-                              changeTaskStatus={changeTaskStatus}
-                              setTodoLists={setTodoLists}
-                              deleteTodolist={deleteTodolist}
-                              changeTaskTitle={changeTaskTitle}
-                              changeTodolistTitle={changeTodolistTitle}/>
-            ))}
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <AppBar position="static" sx={{mb: '30px'}}>
+                    <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Container maxWidth="lg">
+                            <IconButton color="inherit">
+                                <MenuIcon/>
+                            </IconButton>
+                            <Button color="inherit">Sign in</Button>
+                        </Container>
+                        <Switch color={'default'} onChange={changeMode} />
+                    </Toolbar>
+                </AppBar>
+                <Container maxWidth='lg'>
+                    <Grid container sx={{mb: '30px'}}>
+                        <CreateItemForm createItem={createTodolistHandler}/>
+                    </Grid>
+                    <Grid container spacing={4}>
+                        {todoLists.map((todolist) => (
+                            <Paper sx={{p: '0 20px 20px 20px'}} key={todolist.id}>
+                                <TodolistItem todolist={todolist}
+                                              tasks={tasks[todolist.id]}
+                                              deleteTask={deleteTask}
+                                              createTask={createTask}
+                                              changeTaskStatus={changeTaskStatus}
+                                              setTodoLists={setTodoLists}
+                                              deleteTodolist={deleteTodolist}
+                                              changeTaskTitle={changeTaskTitle}
+                                              changeTodolistTitle={changeTodolistTitle}/>
+                            </Paper>
+                        ))}
+                    </Grid>
+                </Container>
+            </ThemeProvider>
         </div>
     )
 }

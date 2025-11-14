@@ -1,6 +1,7 @@
-import {Input} from "./Input.tsx";
-import {Button} from "./Button.tsx";
-import {ChangeEvent, ChangeEventHandler, KeyboardEvent, useState} from "react";
+import {ChangeEvent, KeyboardEvent, useState} from "react";
+import TextField from '@mui/material/TextField';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import IconButton from '@mui/material/IconButton';
 
 type CreateItemFormPropsType = {
     createItem: (editedTitle: string) => void;
@@ -33,12 +34,23 @@ export const CreateItemForm = ({createItem}: CreateItemFormPropsType) => {
 
     return (
         <div>
-            <Input className={error ? 'error' : ''}
-                   value={itemTitle}
-                   onChange={changeItemTitleHandler}
-                   onKeyDown={createItemOnEnterHandler}/>
-            <Button title='+' callBack={createItemHandler}/>
-            {error && <div className='error-message'>{error}</div>}
+            <TextField label="Enter a title"
+                       variant="outlined"
+                       value={itemTitle}
+                       size='small'
+                       error={!!error}
+                       helperText={error}
+                       className={error ? 'error' : ''}
+                       onChange={changeItemTitleHandler}
+                       onKeyDown={createItemOnEnterHandler}/>
+            {/*<Input className={error ? 'error' : ''}*/}
+            {/*       value={itemTitle}*/}
+            {/*       onChange={changeItemTitleHandler}*/}
+            {/*       onKeyDown={createItemOnEnterHandler}/>*/}
+            <IconButton onClick={createItemHandler} color='primary'>
+                <AddBoxIcon />
+            </IconButton>
+            {/*{error && <div className='error-message'>{error}</div>}*/}
         </div>
     );
 };
