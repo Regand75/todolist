@@ -1,7 +1,7 @@
 import './App.css'
 import {FilterValues, TodolistItem} from "./components/TodolistItem/TodolistItem.tsx";
 import {v1} from "uuid";
-import {useState} from "react";
+import {ReactNode, useState} from "react";
 import {CreateItemForm} from "./components/CreateItemForm.tsx";
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -17,7 +17,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 type ThemeMode = 'dark' | 'light'
 
-export type TasksType = {
+export type TaskType = {
     id: string;
     title: string;
     isDone: boolean;
@@ -30,7 +30,7 @@ export type TodolistType = {
 }
 
 type TasksStateType = {
-    [key: string]: TasksType[]
+    [key: string]: TaskType[]
 }
 
 export const App = () => {
@@ -125,7 +125,7 @@ export const App = () => {
     return (
         <div className="app">
             <ThemeProvider theme={theme}>
-                <CssBaseline />
+                <CssBaseline/>
                 <AppBar position="static" sx={{mb: '30px'}}>
                     <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
                         <Container maxWidth="lg">
@@ -134,7 +134,7 @@ export const App = () => {
                             </IconButton>
                             <Button color="inherit">Sign in</Button>
                         </Container>
-                        <Switch color={'default'} onChange={changeMode} />
+                        <Switch color='default' onChange={changeMode}/>
                     </Toolbar>
                 </AppBar>
                 <Container maxWidth='lg'>
@@ -143,18 +143,19 @@ export const App = () => {
                     </Grid>
                     <Grid container spacing={4}>
                         {todoLists.map((todolist) => (
-                            <Paper sx={{p: '0 20px 20px 20px'}} key={todolist.id}>
-                                <TodolistItem todolist={todolist}
-                                              tasks={tasks[todolist.id]}
-                                              deleteTask={deleteTask}
-                                              createTask={createTask}
-                                              changeTaskStatus={changeTaskStatus}
-                                              setTodoLists={setTodoLists}
-                                              deleteTodolist={deleteTodolist}
-                                              changeTaskTitle={changeTaskTitle}
-                                              changeTodolistTitle={changeTodolistTitle}/>
-                            </Paper>
-                        ))}
+                                <Paper sx={{p: '0 20px 20px 20px'}} key={todolist.id}>
+                                    <TodolistItem todolist={todolist}
+                                                  tasks={tasks[todolist.id]}
+                                                  deleteTask={deleteTask}
+                                                  createTask={createTask}
+                                                  changeTaskStatus={changeTaskStatus}
+                                                  setTodoLists={setTodoLists}
+                                                  deleteTodolist={deleteTodolist}
+                                                  changeTaskTitle={changeTaskTitle}
+                                                  changeTodolistTitle={changeTodolistTitle}/>
+                                </Paper>
+                            ) as ReactNode
+                        )}
                     </Grid>
                 </Container>
             </ThemeProvider>

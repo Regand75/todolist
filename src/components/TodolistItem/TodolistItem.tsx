@@ -1,4 +1,4 @@
-import {TasksType, TodolistType} from "../../App.tsx";
+import {TaskType, TodolistType} from "../../App.tsx";
 import Button from '@mui/material/Button';
 import {ChangeEvent, Dispatch, SetStateAction} from "react";
 import {CreateItemForm} from "./../CreateItemForm.tsx";
@@ -13,7 +13,7 @@ import {containerSx, getListItemSx} from "./TodolistItem.styles.ts";
 
 type PropsType = {
     todolist: TodolistType;
-    tasks: TasksType[];
+    tasks: TaskType[];
     deleteTask: (todolistId: string, taskId: string) => void;
     createTask: (todolistId: string, title: string) => void;
     changeTaskStatus: (todolistId: string, taskId: string, isDone: boolean) => void;
@@ -72,13 +72,11 @@ export const TodolistItem = ({
             <ListItem key={task.id} sx={getListItemSx(task.isDone)}>
                 <div>
                     <Checkbox checked={task.isDone} onChange={changeTaskStatusHandler}/>
-                    {/*<Input type="checkbox" checked={task.isDone} onChange={changeTaskStatusHandler}/>*/}
                     <EditableSpan onChange={changeTaskTitleHandler} title={task.title}/>
                 </div>
                 <IconButton onClick={deleteTaskHandler}>
                     <DeleteForeverIcon/>
                 </IconButton>
-                {/*<Button title='+' callBack={deleteTaskHandler}/>*/}
             </ListItem>
         )
     });
@@ -106,7 +104,6 @@ export const TodolistItem = ({
                 <IconButton onClick={deleteTodolistHandler}>
                     <DeleteForeverIcon/>
                 </IconButton>
-                {/*<Button title='x' callBack={deleteTodolistHandler}/>*/}
             </div>
             <CreateItemForm createItem={createTaskHandler}/>
             {tasks.length === 0 ? (<p>Tasks no</p>) : (<List>{mappedTasks}</List>)}

@@ -43,14 +43,9 @@ export const CreateItemForm = ({createItem}: CreateItemFormPropsType) => {
                        className={error ? 'error' : ''}
                        onChange={changeItemTitleHandler}
                        onKeyDown={createItemOnEnterHandler}/>
-            {/*<Input className={error ? 'error' : ''}*/}
-            {/*       value={itemTitle}*/}
-            {/*       onChange={changeItemTitleHandler}*/}
-            {/*       onKeyDown={createItemOnEnterHandler}/>*/}
             <IconButton onClick={createItemHandler} color='primary'>
                 <AddBoxIcon />
             </IconButton>
-            {/*{error && <div className='error-message'>{error}</div>}*/}
         </div>
     );
 };
