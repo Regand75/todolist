@@ -1,6 +1,6 @@
 import {TaskType, TodolistType} from "../../App.tsx";
 import Button from '@mui/material/Button';
-import {ChangeEvent, Dispatch} from "react";
+import {ChangeEvent} from "react";
 import {CreateItemForm} from "./../CreateItemForm.tsx";
 import {EditableSpan} from "./../EditableSpan.tsx";
 import IconButton from '@mui/material/IconButton';
@@ -10,7 +10,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Box from '@mui/material/Box';
 import {containerSx, getListItemSx} from "./TodolistItem.styles.ts";
-import {changeTodolistFilterAC} from "../../model/todolists-reducer.ts";
 
 type PropsType = {
     todolist: TodolistType;
@@ -18,10 +17,10 @@ type PropsType = {
     deleteTask: (todolistId: string, taskId: string) => void;
     createTask: (todolistId: string, title: string) => void;
     changeTaskStatus: (todolistId: string, taskId: string, isDone: boolean) => void;
-    dispatchToTodolists: Dispatch<changeTodolistFilterAC>;
     deleteTodolist: (todolistId: string) => void;
     changeTaskTitle: (todolistId: string, taskId: string, title: string) => void;
     changeTodolistTitle: (todolistId: string, title: string) => void;
+    filteredTasks: (todolistId: string, filterValue: FilterValues) => void;
 }
 
 export type FilterValues = 'all' | 'active' | 'completed';
@@ -32,10 +31,10 @@ export const TodolistItem = ({
                                  deleteTask,
                                  createTask,
                                  changeTaskStatus,
-                                 dispatchToTodolists,
                                  deleteTodolist,
                                  changeTaskTitle,
                                  changeTodolistTitle,
+                                 filteredTasks,
                              }: PropsType) => {
 
     const filteredFoo = () => {
@@ -47,11 +46,6 @@ export const TodolistItem = ({
             default:
                 return tasks;
         }
-    }
-
-    const filteredTasks = (id: string, filterValue: FilterValues) => {
-        dispatchToTodolists(changeTodolistFilterAC({id, filter: filterValue}));
-
     }
 
     const mappedTasks = filteredFoo().map(task => {
@@ -79,7 +73,9 @@ export const TodolistItem = ({
         )
     });
 
-    const filteredTasksHandler = (value: FilterValues) => () => filteredTasks(id, value);
+    const filteredTasksHandler = (value: FilterValues) => {
+        filteredTasks(id, value);
+    }
 
     const deleteTodolistHandler = () => {
         deleteTodolist(id);
@@ -108,17 +104,17 @@ export const TodolistItem = ({
             <Box sx={containerSx}>
                 <Button variant={filter === 'all' ? 'outlined' : 'text'}
                         color='inherit'
-                        onClick={filteredTasksHandler('all')}>
+                        onClick={() => filteredTasksHandler('all')}>
                     All
                 </Button>
                 <Button variant={filter === 'active' ? 'outlined' : 'text'}
                         color='primary'
-                        onClick={filteredTasksHandler('active')}>
+                        onClick={() => filteredTasksHandler('active')}>
                     Active
                 </Button>
                 <Button variant={filter === 'completed' ? 'outlined' : 'text'}
                         color='secondary'
-                        onClick={filteredTasksHandler('completed')}>
+                        onClick={() => filteredTasksHandler('completed')}>
                     Completed
                 </Button>
             </Box>
