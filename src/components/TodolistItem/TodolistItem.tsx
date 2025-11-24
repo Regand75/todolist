@@ -1,6 +1,6 @@
 import {TaskType, TodolistType} from "../../App.tsx";
 import Button from '@mui/material/Button';
-import {ChangeEvent, Dispatch, SetStateAction} from "react";
+import {ChangeEvent, Dispatch} from "react";
 import {CreateItemForm} from "./../CreateItemForm.tsx";
 import {EditableSpan} from "./../EditableSpan.tsx";
 import IconButton from '@mui/material/IconButton';
@@ -10,6 +10,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Box from '@mui/material/Box';
 import {containerSx, getListItemSx} from "./TodolistItem.styles.ts";
+import {changeTodolistFilterAC} from "../../model/todolists-reducer.ts";
 
 type PropsType = {
     todolist: TodolistType;
@@ -17,7 +18,7 @@ type PropsType = {
     deleteTask: (todolistId: string, taskId: string) => void;
     createTask: (todolistId: string, title: string) => void;
     changeTaskStatus: (todolistId: string, taskId: string, isDone: boolean) => void;
-    setTodoLists: Dispatch<SetStateAction<TodolistType[]>>;
+    dispatchToTodolists: Dispatch<changeTodolistFilterAC>;
     deleteTodolist: (todolistId: string) => void;
     changeTaskTitle: (todolistId: string, taskId: string, title: string) => void;
     changeTodolistTitle: (todolistId: string, title: string) => void;
@@ -31,7 +32,7 @@ export const TodolistItem = ({
                                  deleteTask,
                                  createTask,
                                  changeTaskStatus,
-                                 setTodoLists,
+                                 dispatchToTodolists,
                                  deleteTodolist,
                                  changeTaskTitle,
                                  changeTodolistTitle,
@@ -49,10 +50,7 @@ export const TodolistItem = ({
     }
 
     const filteredTasks = (id: string, filterValue: FilterValues) => {
-        setTodoLists((prevTodoLists) => prevTodoLists.map(todolist => todolist.id === id ? {
-            ...todolist,
-            filter: filterValue
-        } : todolist));
+        dispatchToTodolists(changeTodolistFilterAC({id, filter: filterValue}));
 
     }
 
