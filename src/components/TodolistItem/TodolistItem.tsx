@@ -1,4 +1,3 @@
-import {TaskType, TodolistType} from "../../App.tsx";
 import Button from '@mui/material/Button';
 import {ChangeEvent} from "react";
 import {CreateItemForm} from "./../CreateItemForm.tsx";
@@ -10,6 +9,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Box from '@mui/material/Box';
 import {containerSx, getListItemSx} from "./TodolistItem.styles.ts";
+import {TaskType, TodolistType} from "../../app/App.tsx";
 
 type PropsType = {
     todolist: TodolistType;
