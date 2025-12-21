@@ -1,6 +1,6 @@
-import {FilterValues} from "../components/TodolistItem/TodolistItem.tsx";
-import {TodolistType} from "../app/App.tsx";
 import {createAction, createReducer, nanoid} from "@reduxjs/toolkit";
+import {TodolistType} from "@/app/App";
+import {FilterValues} from "@/features/todolists/ui/Todolists/TodolistItem/TodolistItem";
 
 const initialState: TodolistType[] = [];
 

@@ -1,6 +1,5 @@
 import {beforeEach, test, expect} from 'vitest';
 import {v1} from "uuid";
-import {TodolistType} from "../app/App.tsx";
 import {
     changeTodolistFilterAC,
     changeTodolistTitleAC,
@@ -8,6 +7,7 @@ import {
     deleteTodolistAC,
     todolistsReducer
 } from "./todolists-reducer.ts";
+import {TodolistType} from "@/app/App";
 
 let todolistId1: string;
 let todolistId2: string;
