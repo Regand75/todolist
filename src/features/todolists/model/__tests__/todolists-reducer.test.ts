@@ -5,9 +5,9 @@ import {
     changeTodolistTitleAC,
     createTodolistAC,
     deleteTodolistAC,
-    todolistsReducer
-} from "./todolists-reducer.ts";
-import {TodolistType} from "@/app/App";
+    todolistsReducer,
+    TodolistType
+} from "@/features/todolists/model/todolists-reducer.ts";
 
 let todolistId1: string;
 let todolistId2: string;

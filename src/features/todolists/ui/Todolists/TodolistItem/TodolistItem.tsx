@@ -1,16 +1,14 @@
-import {TodolistType} from "@/app/App";
 import {CreateItemForm} from "@/common/components/CreateItemForm/CreateItemForm";
 import {FilterButtons} from "@/features/todolists/ui/Todolists/TodolistItem/FilterButtons/FilterButtons";
 import {TodolistTitle} from "@/features/todolists/ui/Todolists/TodolistItem/TodolistTitle/TodolistTitle";
 import {Tasks} from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/Tasks";
 import {useAppDispatch} from "@/common/hooks/useAppDispatch";
 import {createTaskAC} from "@/features/todolists/model/tasks-reducer";
+import {TodolistType} from "@/features/todolists/model/todolists-reducer.ts";
 
 type PropsType = {
     todolist: TodolistType;
 }
-
-export type FilterValues = 'all' | 'active' | 'completed';
 
 export const TodolistItem = ({
                                  todolist,
