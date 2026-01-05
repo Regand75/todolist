@@ -1,12 +1,12 @@
-import {EditableSpan} from "@/common/components/EditableSpan/EditableSpan";
+import {EditableSpan} from "@/common/components";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import {changeTodolistTitleAC, deleteTodolistAC, TodolistType} from "@/features/todolists/model/todolists-reducer";
-import {useAppDispatch} from "@/common/hooks/useAppDispatch";
+import {useAppDispatch} from "@/common/hooks";
 import styles from './TodolistTitle.module.css'
+import {changeTodolistTitleTC, deleteTodolistTC, DomainTodolistType} from "@/features/todolists/model/todolists-slice";
 
 type TodolistTitleProps = {
-    todolist: TodolistType;
+    todolist: DomainTodolistType;
 }
 
 export const TodolistTitle = ({todolist}: TodolistTitleProps) => {
@@ -14,11 +14,11 @@ export const TodolistTitle = ({todolist}: TodolistTitleProps) => {
     const dispatch = useAppDispatch()
 
     const deleteTodolist = () => {
-        dispatch(deleteTodolistAC({id}));
+        dispatch(deleteTodolistTC({id}));
     };
 
     const changeTodolistTitle = (title: string) => {
-        dispatch(changeTodolistTitleAC({id, newTitle: title}));
+        dispatch(changeTodolistTitleTC({id, title}));
     };
 
     return (

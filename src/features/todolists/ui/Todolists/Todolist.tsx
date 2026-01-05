@@ -1,10 +1,16 @@
 import {TodolistItem} from "@/features/todolists/ui/Todolists/TodolistItem/TodolistItem";
 import Paper from "@mui/material/Paper";
-import {useAppSelector} from "@/common/hooks/useAppSelector";
-import {selectTodolists} from "@/features/todolists/model/todolists-selectors";
+import {useAppDispatch, useAppSelector} from "@/common/hooks";
+import {fetchTodolistsTC, selectTodolists} from "@/features/todolists/model/todolists-slice";
+import {useEffect} from "react";
 
 export const Todolist = () => {
     const todoLists = useAppSelector(selectTodolists);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(fetchTodolistsTC());
+    }, [])
 
     return (
         <>

@@ -5,10 +5,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import Switch from "@mui/material/Switch";
 import AppBar from "@mui/material/AppBar";
-import {useAppDispatch} from "@/common/hooks/useAppDispatch";
-import {changeThemeModeAC} from "@/app/app-reducer";
-import {useAppSelector} from "@/common/hooks/useAppSelector";
-import {selectThemeMode} from "@/app/app-selectors";
+import {useAppDispatch} from "@/common/hooks";
+import {changeThemeModeAC, selectThemeMode} from "@/app/app-slice";
+import {useAppSelector} from "@/common/hooks";
 
 export const Header = () => {
     const dispatch = useAppDispatch();
