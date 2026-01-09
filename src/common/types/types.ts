@@ -9,3 +9,5 @@ export type BaseResponseType<T = {}> = {
   messages: string[]
   fieldsErrors: FieldErrorType[]
 }
+
+export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'

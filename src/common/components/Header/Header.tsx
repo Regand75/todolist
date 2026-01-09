@@ -6,12 +6,14 @@ import Button from "@mui/material/Button";
 import Switch from "@mui/material/Switch";
 import AppBar from "@mui/material/AppBar";
 import {useAppDispatch} from "@/common/hooks";
-import {changeThemeModeAC, selectThemeMode} from "@/app/app-slice";
+import {changeThemeModeAC, selectStatus, selectThemeMode} from "@/app/app-slice";
 import {useAppSelector} from "@/common/hooks";
+import {LinearProgress} from "@mui/material";
 
 export const Header = () => {
     const dispatch = useAppDispatch();
     const themeMode = useAppSelector(selectThemeMode);
+    const status = useAppSelector(selectStatus);
 
     const changeMode = () => {
         dispatch(changeThemeModeAC({themeMode: themeMode === 'light' ? 'dark' : 'light'}));
@@ -28,6 +30,7 @@ export const Header = () => {
                 </Container>
                 <Switch color='default' onChange={changeMode}/>
             </Toolbar>
+            {status === 'loading' && <LinearProgress />}
         </AppBar>
     );
 };
