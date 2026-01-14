@@ -22,7 +22,7 @@ export const TodolistItem = ({
     return (
         <div>
             <TodolistTitle todolist={todolist}/>
-            <CreateItemForm createItem={createTask}/>
+            <CreateItemForm createItem={createTask} entityStatus={todolist.entityStatus}/>
             <Tasks todolist={todolist}/>
             <FilterButtons todolist={todolist}/>
         </div>
