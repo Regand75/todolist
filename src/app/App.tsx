@@ -1,7 +1,7 @@
 import {ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import {useAppSelector} from "@/common/hooks";
-import {Header} from "@/common/components";
+import {ErrorSnackbar, Header} from "@/common/components";
 import {Main} from "@/app/Main";
 import styles from './App.module.css';
 import {getTheme} from "@/common/theme";
@@ -18,6 +18,7 @@ export const App = () => {
                 <CssBaseline/>
                 <Header/>
                 <Main />
+                <ErrorSnackbar />
             </ThemeProvider>
         </div>
     )
