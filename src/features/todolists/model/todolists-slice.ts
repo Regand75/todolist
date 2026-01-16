@@ -35,8 +35,8 @@ export const todolistsSlice = createAppSlice({
                 dispatch(setAppStatusAC({status: "succeeded"}));
                 return res.data
             } catch (error) {
-                dispatch(setAppStatusAC({status: "failed"}));
-                return rejectWithValue(error);
+                handleServerNetworkError(error, dispatch)
+                return rejectWithValue(null);
             }
         }, {
             fulfilled: (_state, action) => {
@@ -51,11 +51,16 @@ export const todolistsSlice = createAppSlice({
         }) => {
             try {
                 dispatch(setAppStatusAC({status: "loading"}));
-                await todolistsApi.changeTodolistTitle(args);
-                dispatch(setAppStatusAC({status: "succeeded"}));
-                return args
+                const res = await todolistsApi.changeTodolistTitle(args);
+                if (res.data.resultCode === ResultCode.Success) {
+                    dispatch(setAppStatusAC({status: "succeeded"}));
+                    return args
+                } else {
+                    handleServerAppError(res.data, dispatch);
+                    return rejectWithValue(null);
+                }
             } catch (error) {
-                dispatch(setAppStatusAC({status: "failed"}));
+                handleServerNetworkError(error, dispatch)
                 return rejectWithValue(null);
             }
         }, {
@@ -70,10 +75,17 @@ export const todolistsSlice = createAppSlice({
             try {
                 dispatch(setAppStatusAC({status: "loading"}));
                 dispatch(changeTodolistEntityStatusAC({id, entityStatus: 'loading'}))
-                await todolistsApi.deleteTodolist(id);
-                dispatch(setAppStatusAC({status: "succeeded"}));
-                return {id}
+                const res = await todolistsApi.deleteTodolist(id);
+                if (res.data.resultCode === ResultCode.Success) {
+                    dispatch(setAppStatusAC({status: "succeeded"}));
+                    return {id}
+                } else {
+                    dispatch(changeTodolistEntityStatusAC({id, entityStatus: 'failed'}));
+                    handleServerAppError(res.data, dispatch);
+                    return rejectWithValue(null);
+                }
             } catch (error) {
+                dispatch(changeTodolistEntityStatusAC({id, entityStatus: 'failed'}))
                 dispatch(setAppStatusAC({status: "failed"}));
                 return rejectWithValue(null);
             }

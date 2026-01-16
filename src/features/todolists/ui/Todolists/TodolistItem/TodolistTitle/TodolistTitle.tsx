@@ -21,10 +21,12 @@ export const TodolistTitle = ({todolist}: TodolistTitleProps) => {
         dispatch(changeTodolistTitleTC({id, title}));
     };
 
+    const disabled = todolist.entityStatus === "loading"
+
     return (
         <div className={styles.container}>
             <h3>
-                <EditableSpan onChange={changeTodolistTitle} title={title}/>
+                <EditableSpan onChange={changeTodolistTitle} title={title} disabled={disabled}/>
             </h3>
             <IconButton onClick={deleteTodolist} disabled={entityStatus === 'loading'}>
                 <DeleteForeverIcon/>

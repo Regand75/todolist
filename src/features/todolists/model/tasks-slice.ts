@@ -4,6 +4,7 @@ import {tasksApi} from "@/features/todolists/api/tasksApi";
 import {DomainTaskType, UpdateTaskModelType} from "@/features/todolists/api/tasksApi.types";
 import {setAppErrorAC, setAppStatusAC} from "@/app/app-slice";
 import {ResultCode} from "@/common/enums";
+import {handleServerAppError, handleServerNetworkError} from "@/common/utils";
 
 export const tasksSlice = createAppSlice({
     name: "tasks",
@@ -28,8 +29,8 @@ export const tasksSlice = createAppSlice({
                 dispatch(setAppStatusAC({status: "succeeded"}));
                 return {tasks: res.data.items, todolistId};
             } catch (error) {
-                dispatch(setAppStatusAC({status: "failed"}));
-                return rejectWithValue(error)
+                handleServerNetworkError(error, dispatch)
+                return rejectWithValue(null)
             }
         }, {
             fulfilled: (state, action) => {
@@ -47,13 +48,11 @@ export const tasksSlice = createAppSlice({
                     dispatch(setAppStatusAC({status: "succeeded"}));
                     return {task: res.data.data.item};
                 } else {
-                    dispatch(setAppStatusAC({status: "failed"}));
-                    const errorMessage = res.data.messages.length ? res.data.messages[0] : 'Some error occurred';
-                    dispatch(setAppErrorAC({error: errorMessage}));
+                    handleServerAppError(res.data, dispatch);
                     return rejectWithValue(null);
                 }
             } catch (error) {
-                dispatch(setAppStatusAC({status: "failed"}));
+                handleServerNetworkError(error, dispatch)
                 return rejectWithValue(error);
             }
         }, {
@@ -67,11 +66,16 @@ export const tasksSlice = createAppSlice({
         }) => {
             try {
                 dispatch(setAppStatusAC({status: "loading"}));
-                await tasksApi.deleteTask(args);
-                dispatch(setAppStatusAC({status: "succeeded"}));
-                return args;
+                const res = await tasksApi.deleteTask(args);
+                if (res.data.resultCode === ResultCode.Success) {
+                    dispatch(setAppStatusAC({status: "succeeded"}));
+                    return args;
+                } else {
+                    handleServerAppError(res.data, dispatch);
+                    return rejectWithValue(null);
+                }
             } catch (error) {
-                dispatch(setAppStatusAC({status: "failed"}));
+                handleServerNetworkError(error, dispatch)
                 return rejectWithValue(error);
             }
         }, {
@@ -100,10 +104,16 @@ export const tasksSlice = createAppSlice({
                     ...domainModel,
                 }
                 const res = await tasksApi.updateTask({todolistId: task.todoListId, taskId: task.id, model});
-                dispatch(setAppStatusAC({status: "succeeded"}));
-                return {task: res.data.data.item};
+                if (res.data.resultCode === ResultCode.Success) {
+                    dispatch(setAppStatusAC({status: "succeeded"}));
+                    return {task: res.data.data.item};
+                } else {
+                    handleServerAppError(res.data, dispatch);
+                    return rejectWithValue(null);
+                }
+
             } catch (error) {
-                dispatch(setAppStatusAC({status: "failed"}));
+                handleServerNetworkError(error, dispatch)
                 return rejectWithValue(error);
             }
         }, {

@@ -9,17 +9,18 @@ import {ChangeEvent} from "react";
 import {getListItemSx} from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.styles";
 import {DomainTaskType} from "@/features/todolists/api/tasksApi.types";
 import {TaskStatus} from "@/common/enums";
+import {DomainTodolistType} from "@/features/todolists/model/todolists-slice";
 
 type TaskItemProps = {
     task: DomainTaskType;
-    todolistId: string
+    todolist: DomainTodolistType;
 }
 
-export const TaskItem = ({task, todolistId}: TaskItemProps) => {
+export const TaskItem = ({task, todolist}: TaskItemProps) => {
     const dispatch = useAppDispatch();
 
     const deleteTask = () => {
-        dispatch(deleteTaskTC({todolistId, taskId: task.id}));
+        dispatch(deleteTaskTC({todolistId: todolist.id, taskId: task.id}));
     };
     const changeTaskStatus = (event: ChangeEvent<HTMLInputElement>) => {
         const newStatus = event.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
@@ -32,14 +33,15 @@ export const TaskItem = ({task, todolistId}: TaskItemProps) => {
     };
 
     const checked = task.status === TaskStatus.Completed
+    const disabled = todolist.entityStatus === 'loading';
 
     return (
         <ListItem sx={getListItemSx(checked)}>
             <div>
-                <Checkbox checked={checked} onChange={changeTaskStatus}/>
-                <EditableSpan onChange={changeTaskTitle} title={task.title}/>
+                <Checkbox checked={checked} onChange={changeTaskStatus} disabled={disabled}/>
+                <EditableSpan onChange={changeTaskTitle} title={task.title} disabled={disabled}/>
             </div>
-            <IconButton onClick={deleteTask}>
+            <IconButton onClick={deleteTask} disabled={disabled}>
                 <DeleteForeverIcon/>
             </IconButton>
         </ListItem>
