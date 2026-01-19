@@ -1,4 +1,5 @@
 export {CreateItemForm} from "./CreateItemForm/CreateItemForm"
 export {EditableSpan} from "./EditableSpan/EditableSpan"
 export {Header} from "./Header/Header"
-export {ErrorSnackbar} from "./ErrorSnackbar/ErrorSnackbar.tsx"
+export {ErrorSnackbar} from "./ErrorSnackbar/ErrorSnackbar"
+export {PageNotFound} from "./PageNotFound/PageNotFound"

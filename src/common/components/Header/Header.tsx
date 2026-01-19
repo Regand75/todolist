@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Switch from "@mui/material/Switch";
 import AppBar from "@mui/material/AppBar";
 import {useAppDispatch} from "@/common/hooks";
-import {changeThemeModeAC, selectStatus, selectThemeMode} from "@/app/app-slice";
+import {changeThemeModeAC, selectStatus, selectThemeMode} from "@/app/model/app-slice.ts";
 import {useAppSelector} from "@/common/hooks";
 import {LinearProgress} from "@mui/material";
 

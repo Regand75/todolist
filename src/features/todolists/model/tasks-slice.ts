@@ -2,7 +2,7 @@ import {createTodolistTC, deleteTodolistTC} from "@/features/todolists/model/tod
 import {createAppSlice} from "@/common/utils/createAppSlice.ts";
 import {tasksApi} from "@/features/todolists/api/tasksApi";
 import {DomainTaskType, UpdateTaskModelType} from "@/features/todolists/api/tasksApi.types";
-import {setAppErrorAC, setAppStatusAC} from "@/app/app-slice";
+import {setAppStatusAC} from "@/app/model/app-slice.ts";
 import {ResultCode} from "@/common/enums";
 import {handleServerAppError, handleServerNetworkError} from "@/common/utils";
 

@@ -1,4 +1,4 @@
-import { setAppErrorAC, setAppStatusAC } from "@/app/app-slice"
+import { setAppErrorAC, setAppStatusAC } from "@/app/model/app-slice.ts"
 import type { Dispatch } from "@reduxjs/toolkit"
 import {BaseResponseType} from "@/common/types";
 

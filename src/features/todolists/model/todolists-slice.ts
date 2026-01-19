@@ -1,7 +1,7 @@
 import {TodolistType} from "@/features/todolists/api/todolistsApi.types";
 import {todolistsApi} from "@/features/todolists/api/todolistsApi";
 import {createAppSlice} from "@/common/utils/createAppSlice.ts";
-import {setAppStatusAC} from "@/app/app-slice";
+import {setAppStatusAC} from "@/app/model/app-slice.ts";
 import {RequestStatusType} from "@/common/types";
 import {ResultCode} from "@/common/enums";
 import {handleServerAppError, handleServerNetworkError} from "@/common/utils";
