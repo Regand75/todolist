@@ -12,12 +12,9 @@ import TextField from '@mui/material/TextField'
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {loginSchema} from "@/features/auth/model/schemas";
+import * as z from "zod"
 
-type LoginInputsType = {
-    email: string,
-    password: string,
-    rememberMe: boolean,
-}
+type LoginInputsType = z.infer<typeof loginSchema>
 
 export const Login = () => {
     const themeMode = useAppSelector(selectThemeMode)
@@ -75,13 +72,6 @@ export const Login = () => {
                         <Controller
                             name={"password"}
                             control={control}
-                            rules={{
-                                required: "Password is required",
-                                minLength: {
-                                    value: 8,
-                                    message: "Password must be at least 8 characters",
-                                },
-                            }}
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}

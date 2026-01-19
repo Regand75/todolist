@@ -2,9 +2,9 @@ import {createTodolistTC, deleteTodolistTC} from "@/features/todolists/model/tod
 import {createAppSlice} from "@/common/utils/createAppSlice.ts";
 import {tasksApi} from "@/features/todolists/api/tasksApi";
 import {DomainTaskType, UpdateTaskModelType} from "@/features/todolists/api/tasksApi.types";
-import {setAppStatusAC} from "@/app/model/app-slice.ts";
 import {ResultCode} from "@/common/enums";
 import {handleServerAppError, handleServerNetworkError} from "@/common/utils";
+import {setAppStatusAC} from "@/app/model/app-slice";
 
 export const tasksSlice = createAppSlice({
     name: "tasks",
