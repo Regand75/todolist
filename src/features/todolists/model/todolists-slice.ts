@@ -5,6 +5,8 @@ import {setAppStatusAC} from "@/app/model/app-slice.ts";
 import {RequestStatusType} from "@/common/types";
 import {ResultCode} from "@/common/enums";
 import {handleServerAppError, handleServerNetworkError} from "@/common/utils";
+import {createTodolistResponseSchema, todolistSchema} from "@/features/todolists/model/schemas/schemas.ts";
+import {defaultResponseSchema} from "@/common/schemas/schemas.ts";
 
 export const todolistsSlice = createAppSlice({
     name: "todolists",
@@ -32,6 +34,7 @@ export const todolistsSlice = createAppSlice({
             try {
                 dispatch(setAppStatusAC({status: "loading"}));
                 const res = await todolistsApi.getTodolists();
+                todolistSchema.array().parse(res.data);
                 dispatch(setAppStatusAC({status: "succeeded"}));
                 return res.data
             } catch (error) {
@@ -52,6 +55,7 @@ export const todolistsSlice = createAppSlice({
             try {
                 dispatch(setAppStatusAC({status: "loading"}));
                 const res = await todolistsApi.changeTodolistTitle(args);
+                defaultResponseSchema.parse(res.data);
                 if (res.data.resultCode === ResultCode.Success) {
                     dispatch(setAppStatusAC({status: "succeeded"}));
                     return args
@@ -76,6 +80,7 @@ export const todolistsSlice = createAppSlice({
                 dispatch(setAppStatusAC({status: "loading"}));
                 dispatch(changeTodolistEntityStatusAC({id, entityStatus: 'loading'}))
                 const res = await todolistsApi.deleteTodolist(id);
+                defaultResponseSchema.parse(res.data);
                 if (res.data.resultCode === ResultCode.Success) {
                     dispatch(setAppStatusAC({status: "succeeded"}));
                     return {id}
@@ -102,6 +107,7 @@ export const todolistsSlice = createAppSlice({
                 try {
                     dispatch(setAppStatusAC({status: "loading"}));
                     const res = await todolistsApi.createTodolist(title);
+                    createTodolistResponseSchema.parse(res.data);
                     if (res.data.resultCode === ResultCode.Success) {
                         dispatch(setAppStatusAC({status: "succeeded"}));
                         return {todolist: res.data.data.item}

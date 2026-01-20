@@ -5,6 +5,8 @@ import {DomainTaskType, UpdateTaskModelType} from "@/features/todolists/api/task
 import {ResultCode} from "@/common/enums";
 import {handleServerAppError, handleServerNetworkError} from "@/common/utils";
 import {setAppStatusAC} from "@/app/model/app-slice";
+import {getTasksSchema, taskOperationResponseSchema} from "@/features/todolists/model/schemas/schemas.ts";
+import {defaultResponseSchema} from "@/common/schemas/schemas.ts";
 
 export const tasksSlice = createAppSlice({
     name: "tasks",
@@ -25,7 +27,8 @@ export const tasksSlice = createAppSlice({
         fetchTasksTC: create.asyncThunk(async (todolistId: string, {dispatch, rejectWithValue}) => {
             try {
                 dispatch(setAppStatusAC({status: "loading"}))
-                const res = await tasksApi.getTasks(todolistId)
+                const res = await tasksApi.getTasks(todolistId);
+                getTasksSchema.parse(res.data);
                 dispatch(setAppStatusAC({status: "succeeded"}));
                 return {tasks: res.data.items, todolistId};
             } catch (error) {
@@ -44,6 +47,7 @@ export const tasksSlice = createAppSlice({
             try {
                 dispatch(setAppStatusAC({status: "loading"}));
                 const res = await tasksApi.createTask(args);
+                taskOperationResponseSchema.parse(res.data);
                 if (res.data.resultCode === ResultCode.Success) {
                     dispatch(setAppStatusAC({status: "succeeded"}));
                     return {task: res.data.data.item};
@@ -67,6 +71,7 @@ export const tasksSlice = createAppSlice({
             try {
                 dispatch(setAppStatusAC({status: "loading"}));
                 const res = await tasksApi.deleteTask(args);
+                defaultResponseSchema.parse(res.data);
                 if (res.data.resultCode === ResultCode.Success) {
                     dispatch(setAppStatusAC({status: "succeeded"}));
                     return args;
@@ -104,6 +109,7 @@ export const tasksSlice = createAppSlice({
                     ...domainModel,
                 }
                 const res = await tasksApi.updateTask({todolistId: task.todoListId, taskId: task.id, model});
+                taskOperationResponseSchema.parse(res.data);
                 if (res.data.resultCode === ResultCode.Success) {
                     dispatch(setAppStatusAC({status: "succeeded"}));
                     return {task: res.data.data.item};

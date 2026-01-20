@@ -1,6 +1,6 @@
-export type TodolistType = {
-  id: string
-  title: string
-  addedDate: string
-  order: number
-}
+import {createTodolistResponseSchema, todolistSchema} from "@/features/todolists/model/schemas/schemas.ts";
+import * as z from "zod";
+
+export type TodolistType = z.infer<typeof todolistSchema>
+
+export type CreateTodolistResponse = z.infer<typeof createTodolistResponseSchema>
