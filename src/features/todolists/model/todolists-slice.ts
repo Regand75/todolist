@@ -7,12 +7,18 @@ import { ResultCode } from '@/common/enums';
 import { handleServerAppError, handleServerNetworkError } from '@/common/utils';
 import { defaultResponseSchema } from '@/common/schemas/schemas.ts';
 import { createTodolistResponseSchema, todolistSchema } from '@/features/todolists/model/schemas/schemas.ts';
+import { clearDataAC } from '@/common/actions';
 
 export const todolistsSlice = createAppSlice({
   name: 'todolists',
   initialState: [] as DomainTodolistType[],
   selectors: {
     selectTodolists: (state) => state,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearDataAC, (_state, action) => {
+      return action.payload.todolists;
+    });
   },
   reducers: (create) => ({
     changeTodolistFilterAC: create.reducer<{ id: string; filter: FilterValues }>((state, action) => {

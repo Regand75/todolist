@@ -9,7 +9,7 @@ export const fieldErrorSchema = z.object({
 export const baseResponseSchema = <T extends z.ZodTypeAny>(schema: T) =>
     z.object({
         data: schema,
-        resultCode: z.nativeEnum(ResultCode),
+        resultCode: z.enum(ResultCode),
         messages: z.string().array(),
         fieldsErrors: fieldErrorSchema.array(),
     })

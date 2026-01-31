@@ -30,7 +30,7 @@ export const taskOperationResponseSchema = baseResponseSchema(
 export const todolistSchema = z.object({
     id: z.string(),
     title: z.string(),
-    addedDate: z.string().datetime({ local: true }),
+    addedDate: z.iso.datetime({ local: true }),
     order: z.number(),
 });
 
